@@ -1,0 +1,4 @@
+<%= search_form_for @search do |f| %>  
+  <%= f.collection_select :status_eq, Estate.all, :status, :status, { prompt: 'Select Project'} %> 
+  <div class="actions"><%= f.submit "Search" %></div>
+<% end %>

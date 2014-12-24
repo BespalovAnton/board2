@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>M</title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= csrf_meta_tags %>
+
+
+
+
+</head>
+<body>
+
+<%= render 'layouts/header' %>
+
+
+<div class="wrapper">
+	<div class="middle">
+		<div class="results">
+			<h1>
+				Продажа квартир<%="," unless @current_city = "" %>
+				<%= @current_city %>
+			</h1>
+		</div>
+
+
+
+<% if false %>
+							<div class="search">
+				      	<%= search_form_for @search do |f| %>
+				  				<div class="form-field">
+				  				<%= f.text_field :city_eq, class: "search-text", placeholder: "Введите город"%>
+				  				</div>
+				  				<div class="submit">
+				  					<%= submit_tag "Поиск", data: { confirm: "confirm msg" }, class: "btn", onclick: "return false" %>
+				  				</div>
+				  			<% end %>
+				    	</div>
+							<h1><%= @current_city %></h1>
+<% end %>
+
+
+
+
+
+		<div class="navigation">
+			<div class="city-form">
+				<h3>Выбери город</h3>
+				<%= search_form_for @search do |f| %>
+				  <div class="filter search-field">
+	  				<%= f.text_field :city_eq, class: "search-text" %>
+	  			</div>
+			</div>
+			<div class="price-form">
+				<h3>Цена</h3>
+			  <div class=" filter price">
+			    <%= f.text_field :price_gteq, placeholder: 'От' %>
+			  </div>
+			  <div class="filter price">
+			    <%= f.text_field :price_lteq, placeholder: 'До' %>    
+			  </div>
+			</div>  
+			<div class="room-form">
+				<h3>Комнаты</h3>
+				<div class="filter room_number">
+				<% @current_room_number = params[:q] %>
+				<% @current_room_number = @current_room_number[:room_number_eq_any] if params[:q] %>
+				<% if @current_room_number.present? %>
+					<%= f.select :room_number_eq_any, options_for_select([['1-к', 1], ['2-к', 2], ['3-к', 3], ['более 3', '4 OR 5']], selected: params[:q][:room_number_eq_any]), {promt: true}, { multiple: true, class: 'chosen-select', data: {placeholder: ' ' }} %>
+				<% else %>
+					<%= f.select :room_number_eq_any, options_for_select([['1-к', 1], ['2-к', 2], ['3-к', 3], ['более 3', '4 OR 5']]), {promt: true}, { multiple: true, class: 'chosen-select', data: {placeholder: ' ' }} %>
+				<% end %>
+				</div>
+			</div>
+
+			<div class="filter actions">
+			 	<%= f.submit "Search", class: "btn" %>
+			</div>
+				<% end %>
+		</div>
+	
+
+
+Контроллер
+class EstatesController < ApplicationController
+	def index
+		@search = Estate.search(params[:q])
+		@estates = @search.result
+	end
+end
+
+Модель
+class Estate < ActiveRecord::Base
+end
+
+
+
+
+
+
+
+			<% if false %>
+			  <%= f.collection_select(:status_eq, Estate.all, :status, :status, {promt: true}, {class: 'chosen-select', multiple: true, size: 4, data: {placeholder: 'Что ищем' }}) %> 
+
+
+
+
+
+
+
+			  			<%= f.select :price_eq, options_for_select([['All', 1], ['Co', 2], ['Bought', 3], ['View', 4], ['Top API', 5]], :selected => params[:q][:price_eq]) %>
+
+
+--------------РАБОЧАЯ
+			  								<%= f.select :room_number_eq_any, options_for_select([['1-к', 1], ['2-к', 2], ['3-к', 3], ['более 3', '4 OR 5']]), {promt: true}, { multiple: true, class: 'chosen-select', data: {placeholder: ' ' }} %>
+			<% end %>
+
+
+		
+
+
+
+
+
+
+
+
+		<div class="container">
+
+
+
+
+
+
+			<main class="content">
+		
+<% if false %>
+			<tr>
+			  <th><%= sort_link(@search, :city, "Город") %></th>
+			  <th><%= sort_link(@search, :created_at, "Дата создания") %></th>
+			  <th><%= sort_link(@search, :price, "Цена") %></th>
+			</tr>
+<% end %>
+
+				<%= yield %>
+			</main><!-- .content -->
+		</div><!-- .container-->
+
+
+
+	</div><!-- .middle-->
+
+
+
+</div><!-- .wrapper -->
+
+
+
+
+
+
+
+</body>
+</html>
